@@ -6,28 +6,36 @@ const columns = [todo, progress, done];
 let dragElement = null;
 let tasksData = {};
 
+function buildTaskHTML(tittle, desc) {
+  return `
+    <div class="task-content">
+      <div class="task-main">
+        <h2>${tittle}</h2>
+        <p>${desc}</p>
+      </div>
+      <button>Remove</button>
+    </div>
+  `;
+}
 
 function addTask(tittle, desc, column) {
   const div = document.createElement("div");
-
   div.classList.add("task");
   div.setAttribute("draggable", "true");
-
-  div.innerHTML = `
-                    <h2>${tittle}</h2>
-                    <p>${desc}</p>
-                    <button>Delete</button>
-                `;
-
+  div.innerHTML = buildTaskHTML(tittle, desc);
   column.appendChild(div);
-  div.addEventListener("drag", (e) => {
+
+  div.addEventListener("drag", () => {
     dragElement = div;
   });
 
   const deleteButton = div.querySelector("button");
   deleteButton.addEventListener("click", () => {
-    div.remove();
-    updateTaskCount();
+    div.classList.add("task-removing");
+    setTimeout(() => {
+      div.remove();
+      updateTaskCount();
+    }, 120);
   });
 
   return div;
@@ -50,21 +58,20 @@ function updateTaskCount() {
   });
 }
 
+// load from localStorage
 if (localStorage.getItem("tasks")) {
   const data = JSON.parse(localStorage.getItem("tasks"));
-
   for (const col in data) {
     const column = document.querySelector(`#${col}`);
     data[col].forEach((task) => {
       addTask(task.tittle, task.desc, column);
     });
   }
-
   updateTaskCount();
 }
 
 tasks.forEach((task) => {
-  task.addEventListener("drag", (e) => {
+  task.addEventListener("drag", () => {
     dragElement = task;
   });
 });
@@ -86,45 +93,62 @@ function addDragEventsOnColumn(column) {
 
   column.addEventListener("drop", (e) => {
     e.preventDefault();
-
     column.appendChild(dragElement);
     column.classList.remove("hover-over");
-
     updateTaskCount();
   });
 }
+
 addDragEventsOnColumn(todo);
 addDragEventsOnColumn(progress);
 addDragEventsOnColumn(done);
 
-
-// START: Add New Task Modal Logic 
+// Modal logic
 const toggleModalButton = document.querySelector("#toggle-modal");
 const modalBg = document.querySelector(".modal .bg");
-const close = document.querySelector(".ri-close-line")
 const modal = document.querySelector(".modal");
 const addTaskButton = document.querySelector("#add-new-task");
+const titleInput = document.querySelector("#task-tittle-input");
+const descInput = document.querySelector("#task-desc-input");
 
-toggleModalButton.addEventListener("click", () => {
-  modal.classList.toggle("active");
-});
-
-close.addEventListener("click", () => {
+function closeModal() {
   modal.classList.remove("active");
-});
+}
+
+function openModal() {
+  modal.classList.add("active");
+  setTimeout(() => {
+    titleInput.focus();
+  }, 10);
+}
+
+toggleModalButton.addEventListener("click", openModal);
+modalBg.addEventListener("click", closeModal);
 
 addTaskButton.addEventListener("click", () => {
-  const taskTittle = document.querySelector("#task-tittle-input").value.trim();
-  const taskDesc = document.querySelector("#task-desc-input").value.trim();
-
+  const taskTittle = titleInput.value.trim();
+  const taskDesc = descInput.value.trim();
   if (taskTittle === "" || taskDesc === "") return;
 
   addTask(taskTittle, taskDesc, todo);
   updateTaskCount();
-  modal.classList.remove("active");
+  closeModal();
 
-  document.querySelector("#task-tittle-input").value = "";
-  document.querySelector("#task-desc-input").value = "";
+  titleInput.value = "";
+  descInput.value = "";
 });
 
-// END: Add New Task Modal Logic 
+// Enter+Ctrl / Enter+Cmd submit
+descInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+    addTaskButton.click();
+  }
+});
+
+// Show today's date
+const todayText = document.querySelector("#today-text");
+if (todayText) {
+  const now = new Date();
+  const options = { weekday: "short", day: "numeric", month: "short" };
+  todayText.textContent = now.toLocaleDateString(undefined, options);
+}

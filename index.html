@@ -2,48 +2,78 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <title>TaskFlow</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Task Flow</title>
-
     <link
-      href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css" />
+    <script
+      src="https://kit.fontawesome.com/4d5b6c2d7b.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
-
   <body>
+    <div class="app-gradient"></div>
     <main>
+      <!-- Nav -->
       <nav>
-        <div class="left">Task Flow - Kanban Board</div>
-        <div class="right">
+        <div class="left">
+          <div class="logo-mark">T</div>
+          <div class="title-group">
+            <h1>TaskFlow</h1>
+            <p>Plan, drag and complete your day.</p>
+          </div>
+        </div>
+
+        <div class="right-nav">
+          <div class="today-pill">
+            <i class="fa-regular fa-calendar"></i>
+            <span id="today-text"></span>
+          </div>
           <button id="toggle-modal">
-            <i class="ri-add-line"></i>
-            Add New Task
+            <i class="fa-solid fa-plus"></i>
+            New Task
           </button>
         </div>
       </nav>
 
-      <section class="board">
-        <div id="todo" class="task-column">
+      <!-- Columns -->
+      <section>
+        <div class="task-column" id="todo">
           <div class="heading">
-            <span>To Do</span>
-            <span class="right">0</span>
+            <div class="heading-left">
+              <span class="status-dot status-todo"></span>
+              <h2>To Do</h2>
+            </div>
+            <div class="right">0</div>
           </div>
+          <p class="column-subtitle">
+            Ideas and tasks you haven’t started yet.
+          </p>
         </div>
 
-        <div id="progress" class="task-column">
+        <div class="task-column" id="progress">
           <div class="heading">
-            <span>In Progress</span>
-            <span class="right">0</span>
+            <div class="heading-left">
+              <span class="status-dot status-progress"></span>
+              <h2>In Progress</h2>
+            </div>
+            <div class="right">0</div>
           </div>
+          <p class="column-subtitle">Tasks you are currently working on.</p>
         </div>
 
-        <div id="done" class="task-column">
+        <div class="task-column" id="done">
           <div class="heading">
-            <span>Done</span>
-            <span class="right">0</span>
+            <div class="heading-left">
+              <span class="status-dot status-done"></span>
+              <h2>Done</h2>
+            </div>
+            <div class="right">0</div>
           </div>
+          <p class="column-subtitle">Completed tasks and finished ideas.</p>
         </div>
       </section>
     </main>
@@ -52,14 +82,33 @@
     <div class="modal">
       <div class="bg"></div>
       <div class="center">
-        <h3>Create Task</h3>
-        <i class="ri-close-line"></i>
-        <input type="text" id="task-tittle-input" placeholder="Task Title" />
-        <textarea
-          id="task-desc-input"
-          placeholder="Task Description"
-        ></textarea>
-        <button id="add-new-task">Add Task</button>
+        <div class="modal-header">
+          <h2>Create task</h2>
+          <p>Add a clear title and a short description.</p>
+        </div>
+
+        <label class="field">
+          <span>Title</span>
+          <input
+            type="text"
+            id="task-tittle-input"
+            placeholder="Enter task title"
+          />
+        </label>
+
+        <label class="field">
+          <span>Description</span>
+          <textarea
+            id="task-desc-input"
+            rows="4"
+            placeholder="Describe what this task involves."
+          ></textarea>
+        </label>
+
+        <button id="add-new-task">
+          <i class="fa-solid fa-plus"></i>
+          Add task
+        </button>
       </div>
     </div>
 
