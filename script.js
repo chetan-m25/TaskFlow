@@ -101,6 +101,7 @@ addDragEventsOnColumn(done);
 // START: Add New Task Modal Logic 
 const toggleModalButton = document.querySelector("#toggle-modal");
 const modalBg = document.querySelector(".modal .bg");
+const close = document.querySelector(".ri-close-line")
 const modal = document.querySelector(".modal");
 const addTaskButton = document.querySelector("#add-new-task");
 
@@ -108,7 +109,7 @@ toggleModalButton.addEventListener("click", () => {
   modal.classList.toggle("active");
 });
 
-modalBg.addEventListener("click", () => {
+close.addEventListener("click", () => {
   modal.classList.remove("active");
 });
 
